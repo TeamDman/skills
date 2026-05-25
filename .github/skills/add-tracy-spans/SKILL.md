@@ -280,6 +280,15 @@ Use this quick table when deciding what to add.
 | Moderate-cost helper called occasionally | Always-on `#[instrument(skip_all)]` can be fine |
 | Tiny helper called extremely often | Avoid or gate the span |
 
+## Frame Timing
+
+We should inform Tracy-profiler of our frame timing by using this marker at the end of each frame:
+
+```rust
+#[cfg(feature = "tracy")]
+info!(message = "finished frame", tracy.frame_mark = true,);
+```
+
 ## Review Checklist
 
 Before finishing, verify all of these:
