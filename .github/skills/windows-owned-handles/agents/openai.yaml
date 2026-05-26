@@ -1,0 +1,4 @@
+interface:
+  display_name: "Windows Owned Handles"
+  short_description: "Use windows-rs Owned<T> for Win32 handles."
+  default_prompt: "Audit this Rust Windows code for custom OwnedHandle wrappers and replace them with windows-rs Owned<T> where appropriate."
