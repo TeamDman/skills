@@ -1,277 +1,255 @@
 ---
 name: resumable-implementation-plans
-description: 'Create resumable implementation plans for features, refactors, migrations, UI work, or reverse-engineering work. Use when a plan file must capture the overall goal, SMART sub-goals, phase-by-phase done criteria, current progress, remaining work, and Tracey or Tracy specification updates and coverage work alongside implementation.'
-argument-hint: 'Describe the change, current state, and whether Tracey spec and coverage planning must be included'
+description: Create or maintain a living Markdown implementation plan for a feature, integration, refactor, migration, or multi-version change. Use when implementation must survive context restarts and needs explicit scope, design decisions, task-level progress, validation evidence, risk management, or cross-target acceptance.
 ---
 
 # Resumable Implementation Plans
 
-Use this skill when drafting or updating a plan file that needs to do more than list ideas.
-The plan should guide real implementation, break work into independently valuable slices, and serve as the restart point for future conversations or compacted context.
-
-## Outcome
-
-Produce a plan that:
-
-- states the overarching goal and constraints clearly
-- breaks work into discrete phases with actionable tasks
-- gives each phase a concrete definition of done
-- treats Tracey specification and coverage work as first-class tasks when relevant
-- records what has already been completed, what is currently in focus, and what remains
-- lets a new agent resume the work from the plan file alone
-
-## When To Use
-
-Use this skill for:
-
-- feature plans
-- UI plans
-- refactor plans
-- migration plans
-- reverse-engineering roadmaps
-- plans that must stay useful across multiple conversations
-- repositories that track behavior with Tracey or Tracy specifications and coverage queries
-
-Do not use this skill for a one-shot checklist with no ongoing status, or for generic brainstorming that is not yet ready to become an implementation plan.
-
-## Core Principles
-
-1. Plan against the real codebase, not an imagined architecture.
-2. Break work into phases that each move the system forward in a measurable way.
-3. Keep requirements, assumptions, and open questions separate.
-4. When Tracey is in play, update the spec plan and the implementation plan together.
-5. The plan file is part roadmap, part handoff artifact, and part current-state snapshot.
-
-## Procedure
-
-### 1. Build context from the real environment
-
-Before writing the plan:
-
-- read the user request and any rough notes or existing design docs
-- read repository instructions that affect structure or conventions
-- inspect the relevant code structure, commands, modules, tests, and docs
-- inspect existing spec documents and the local Tracey config when the repo uses Tracey
-- if updating an existing plan, read the plan file first and determine what has changed since it was written
-
-Do not start with a generic outline before you know the actual integration points.
-
-### 2. Extract the real planning inputs
-
-From the gathered context, identify:
-
-- the overarching goal
-- the observable product or workflow requirements
-- repository or architecture constraints
-- environment assumptions that should be explicit
-- backend gaps that block higher-level work
-- already-completed work that should be reflected in the plan
-- remaining work that still needs sequencing
-
-If important uncertainty remains, ask a small number of targeted questions before finalizing the plan.
-Ask only the questions that materially change the structure of the plan.
-
-### 3. Decide the Tracey specification strategy early
-
-If the repository uses Tracey, do not leave spec work as an afterthought.
-
-Use this branching rule:
-
-- if the change introduces a new behavior area, new user-facing subsystem, or distinct interaction model, create a dedicated Tracey spec for it by default
-- if the change is a narrow extension of an existing tracked surface, extend the existing spec instead
-
-Only reuse an existing spec when the fit is obviously narrow, clean, and easier to maintain than a dedicated spec.
-
-When current implementation exists but is not mapped:
-
-- add or refine the spec if the behavior is intentional and should be preserved
-- tighten or remove the implementation if the behavior is accidental, obsolete, or too vague to promise
-
-### 4. Establish the Tracey baseline and workflow
-
-When Tracey is relevant, include the concrete command workflow in the plan.
-
-Use these commands as the standard baseline loop:
-
-```powershell
-tracey query status
-tracey query uncovered
-tracey query unmapped
-tracey query unmapped --path <path>
-tracey query validate --deny warnings
-```
-
-Use this follow-up after implementation coverage is under control:
-
-```powershell
-tracey query untested
-```
-
-The plan should explicitly state:
-
-- the current baseline, when known
-- how new requirements will be added to Tracey
-- how touched implementation will receive references as it lands
-- whether repo-wide coverage debt needs its own cleanup phase to reach full implementation coverage
-
-### 5. Choose phase boundaries that produce real progress
-
-Each phase should be independently valuable and should bring the project closer to the goal when completed on its own.
-
-Good phase boundaries usually separate:
-
-- scaffolding and command registration
-- core state or data-model work
-- user interaction layers
-- backend support required by higher layers
-- progress, observability, or instrumentation work
-- hardening, tests, docs, and coverage cleanup
-
-Prefer vertical slices over giant categories like "Implement UI" or "Build backend".
-
-### 6. Write the plan structure explicitly
-
-Use a structure close to this:
-
-1. Goal
-2. Current Status
-3. Constraints And Assumptions
-4. Product Requirements
-5. Architectural Direction
-6. Tracey Specification Strategy
-7. Phased Task Breakdown
-8. Recommended Implementation Order
-9. Open Decisions
-10. First Concrete Slice
-
-The Current Status section is always required, even on day one.
-
-Include at least:
-
-- done so far
-- current focus
-- remaining work
-- immediate next step
-
-For a brand-new plan, seed Current Status with the context work already completed, such as reading the repo, choosing the spec strategy, or recording the initial Tracey baseline.
-
-### 7. Write SMART sub-goals inside each phase
-
-For each phase, include:
-
-- objective
-- tasks
-- definition of done
-
-Keep tasks concrete enough that an implementer can act on them without having to reinterpret the plan.
-
-A good phase:
-
-- has a clear purpose
-- has tasks tied to known files, modules, or workflows when possible
-- has completion criteria that can be checked
-- does not hide unrelated work inside one bucket
-
-### 8. Make the plan resumable on purpose
-
-The plan is not finished when the phase list exists.
-It also needs to be usable after context compaction or in a fresh conversation.
-
-To make the plan resumable:
-
-- record what has already been completed
-- keep remaining work current instead of letting it drift from reality
-- note important decisions that have already been made
-- leave open questions in a dedicated section
-- include the next recommended slice so a new agent can restart quickly
-
-After each meaningful work session, update the plan before stopping.
-When updating an in-progress plan, revise the Current Status section first.
-Do not rely on the chat history to communicate progress.
-
-### 9. Review the plan before stopping
-
-Before considering the plan complete, verify that:
-
-- the overall goal is clear
-- the requirements are observable and not just aspirational
-- assumptions are explicit
-- open questions are separated from committed requirements
-- the phases are ordered and independently meaningful
-- each phase has a definition of done
-- Tracey spec work is included when relevant
-- completed work and remaining work are both represented
-- a new agent could resume from the file alone
-
-## Branching Rules
-
-Use these decision rules while planning:
-
-- New behavior area: create a dedicated Tracey spec by default.
-- Small extension of an existing tracked area: extend the existing spec.
-- Existing implementation is unmapped but intentional: add or refine the spec and map it.
-- Existing implementation is unmapped and should not be promised: tighten or remove it.
-- Significant backend dependency for a user-facing feature: add an explicit backend phase.
-- Existing repo-wide Tracey debt blocks meaningful progress reporting: add a coverage-cleanup phase instead of pretending the new work is isolated.
-- Brand-new plan: seed Current Status with context gathered so far.
-- After each meaningful work session: update done so far, remaining work, and next step before stopping.
-- In-progress plan: update Current Status before adding new phases.
-
-## Recommended Section Shape
-
-Use this outline as the default shape for the written plan:
+Create a plan that is an executable work contract, not an idea list or detached
+work log. A new agent must be able to resume safely from the file alone.
+
+## Plan against evidence
+
+Inspect before writing or revising a plan:
+
+- Read repository and directory instructions, the existing plan, related docs,
+  source entry points, tests, build commands, and release/propagation workflow.
+- Identify the actual modules, files, data boundaries, dependencies, and test
+  harnesses involved. Cite paths and commands that will help the next agent.
+- Separate:
+  - **verified foundation** — facts established by code, tests, or prior work;
+  - **confirmed decisions** — choices already made by the user or project;
+  - **assumptions** — provisional beliefs that need validation; and
+  - **open decisions** — choices that materially change design, scope, or
+    acceptance.
+- Never claim a behavior, API, dependency version, test result, or commit
+  exists without evidence from the repository or an authoritative source.
+
+Ask only the questions that change architecture, public behavior, irreversible
+data choices, support policy, or the testable definition of success. Otherwise
+make a stated, reversible working assumption.
+
+## Use the living-plan protocol
+
+Give every plan a short metadata block and this update rule near the top:
 
 ```markdown
-# <Plan Title>
+**Plan status:** Active
+**Primary implementation root:** `<path or branch>`
+**Last updated:** YYYY-MM-DD
 
-## Goal
+## How to update this plan
 
-## Current Status
-- Done so far:
-- Current focus:
-- Remaining work:
-- Next step:
+- `[ ]` Not started
+- `[~]` In progress
+- `[x]` Complete
+- `[!]` Blocked
 
-## Constraints And Assumptions
-
-## Product Requirements
-
-## Architectural Direction
-
-## Tracey Specification Strategy
-
-## Phased Task Breakdown
-
-## Recommended Implementation Order
-
-## Open Decisions
-
-## First Concrete Slice
+Put a work item's status in its heading. Update its heading and its completion
+notes together. A phase is complete only when every work item in it is
+`[x]`. Record decisions, commit IDs, validation results, and follow-ups below
+the task they affect; do not append a detached chronological work log.
 ```
 
-Adjust the headings when needed, but keep the same functional content.
+Use `[!]` only with the exact blocker, the last evidence gathered, and the
+condition that would unblock it. Do not use it merely for unfinished work.
 
-## Anti-Patterns
+Keep at most one current implementation focus unless parallel work is
+intentional and the plan names the independent owners or tracks.
 
-Avoid these failures:
+## Shape the plan around the change
 
-- writing a plan before reading the relevant code and docs
-- producing generic phases that are not tied to real integration points
-- listing tasks without definitions of done
-- hiding Tracey work in a final cleanup note instead of planning it alongside implementation
-- assuming future agents will reconstruct progress from chat history
-- mixing unresolved questions into the committed requirements
-- forcing a new behavior area into the wrong spec instead of creating a dedicated one
-- leaving the plan static after work has already started
+Use only the sections that add decision-making value, but normally include:
 
-## Completion Checklist
+1. **Purpose** — the observable outcome and its primary user/system value.
+2. **Scope** — explicit in-scope and out-of-scope boundaries.
+3. **Established foundation** — prerequisites already completed and deliberately
+   not reopened.
+4. **Confirmed constraints** — non-negotiable invariants, ownership/lifecycle
+   rules, compatibility policy, security/privacy constraints, and repository
+   workflow constraints.
+5. **Design questions that must be closed before implementation** — a gate table
+   for material unknowns.
+6. **Source and implementation references** — relevant paths, commands, issue
+   context, and authoritative external sources.
+7. **Execution order** — a compact dependency flow where phase ordering is not
+   obvious.
+8. **Phases and work items** — the implementation contract.
+9. **Overall completion criteria** — release-level proof, not a restatement of
+   the task list.
+10. **Risk register** — risks that need a mitigation or a validation gate.
 
-Before you finish, confirm all of these:
+Do not add a generic “current status” section that duplicates task statuses.
+Use the task headings and completion notes as the authoritative current state.
+Add a brief “next slice” only when the immediate next action cannot be inferred
+from the first `[ ]` or `[~]` work item.
 
-- The plan matches the repository's structure and conventions.
-- The plan contains a real Current Status section.
-- The phases are actionable and independently meaningful.
-- The plan includes spec and coverage work when Tracey is relevant.
-- The plan distinguishes done work from remaining work.
-- The next recommended step is explicit.
-- The file can serve as a restart point in a new conversation.
+### Define scope precisely
+
+Write scope in terms of observable behavior and ownership boundaries. State
+what will not be changed so adjacent work does not expand incidentally.
+
+For example, distinguish:
+
+- production integration from test-fixture infrastructure;
+- a stable public contract from internal storage representation;
+- a feature implementation from dependency/toolchain redesign;
+- a supported target from a target intentionally outside the support matrix.
+
+When a prior plan established a prerequisite, record it as foundation and
+reference it. Do not re-plan or silently alter that prior decision.
+
+### Turn uncertainty into a decision gate
+
+Before implementation, make material design choices visible in a table:
+
+```markdown
+| Question | Required decision | Acceptance consequence |
+| --- | --- | --- |
+| Entry point | Which objects expose the feature? | Topology tests cover every allowed and rejected entry point. |
+| Public contract | Exact names, inputs, outputs, errors, and lifecycle | Call-level tests assert every declared behavior. |
+| Compatibility | Which targets are supported and how adapters work? | A target matrix records supported, excluded, and adapter-tested cases. |
+```
+
+A gate is not a brainstorming list. Each question must name the decision needed
+and the test or documentation consequence. Close the gate in completion notes
+before downstream implementation begins.
+
+## Write task-level work contracts
+
+Organize phases by dependencies and meaningful slices, not generic departments.
+Prefer a progression such as foundation → contract/reconnaissance → narrow
+adapter/core behavior → adjacent surfaces → end-to-end acceptance →
+documentation/propagation/release.
+
+Give each work item this form:
+
+````markdown
+### [ ] 2.1 <verb-led, bounded outcome>
+
+**Work:**
+
+- Change the named modules or behavior.
+- Preserve the named invariant or lifecycle.
+- Add the smallest meaningful proof.
+
+**Validation:**
+
+```pwsh
+<exact current command>
+````
+
+**Completion criteria:** <observable condition that makes this item true>
+```
+
+For an active or completed item, place **Completion notes** immediately below
+the heading. Include only durable evidence:
+
+- the actual design decision made;
+- affected paths or public surface;
+- commit IDs when useful for provenance;
+- commands run and their relevant outcome;
+- intentional exceptions, follow-ups, or support limits.
+
+Do not use vague completions such as “implemented” or “tests pass.” Name what
+was proven and by which command/test.
+
+Keep work items small enough to complete and validate independently. Split
+work that combines a public contract decision, state-model change, integration,
+and release work. A phase may contain several related tasks, but it should not
+hide unrelated changes behind one completion checkbox.
+
+## Put validation beside the behavior
+
+Every non-trivial task needs a validation strategy before implementation.
+Choose the smallest proof that exercises the claimed layer:
+
+- unit or parser test for pure logic;
+- integration test for a boundary adapter;
+- real runtime/GameTest/browser/CLI invocation for discovery and wiring;
+- migration or fixture test for persisted data;
+- documentation/example check for public contracts.
+
+A direct adapter test does not prove runtime registration. A smoke test does
+not prove feature behavior. State which layer each test proves.
+
+Use exact commands from the current repository. Include filters, branches,
+working directories, prerequisites, and environment assumptions when they
+matter. Treat successful commands as evidence only when they ran against the
+current source tree, not a stale installed binary.
+
+For multi-target work, include an acceptance matrix rather than vague
+“test all versions” wording:
+
+```markdown
+| Target/dialect | Support status | Required validation | Evidence |
+| --- | --- | --- | --- |
+| Baseline target | supported | compile + focused + full suite | pending |
+| Adapter target | supported via adapter | compile + adapter test | pending |
+| No upstream dependency | explicitly unsupported | ordinary compile; source excluded by toolchain policy | pending |
+```
+
+Record unavailable dependencies, unsupported targets, and intentionally skipped
+tests explicitly. Do not delete shared feature sources merely to make one
+target compile when a source-set/toolchain exclusion preserves propagation
+history more safely.
+
+## Plan compatibility and propagation deliberately
+
+When code must span versions, loaders, platforms, or deployment targets:
+
+- Name the primary implementation target and implement the common intent there
+  first.
+- Separate genuine target-specific adapters from ordinary divergence.
+- State the propagation method, conflict-resolution rule, and audit command.
+- Preserve newer-target behavior during propagation; do not overwrite it with
+  the baseline implementation.
+- Put source-set exclusions, dependency availability, and target support policy
+  in the toolchain/configuration plan so shared source remains merge-friendly.
+- Add focused validation for each adapter or exclusion boundary.
+
+Do not make a later target the silent source of truth. Any exception must be
+documented with its support consequence.
+
+## Include documentation, release, and risks when relevant
+
+Add a final phase for user-facing documentation, changelog/release notes,
+propagation, and cross-target acceptance when the change reaches users.
+
+Write overall completion criteria as a checklist of release truths, for
+example: every task has evidence; public contract and docs agree; data
+integrity is preserved; targeted and full validation pass; supported targets
+are proven or accurately scoped out.
+
+Use a risk register for risks that can invalidate the plan:
+
+- state corruption or lifecycle bypass;
+- public API versus internal implementation coupling;
+- migration/compatibility drift;
+- test false confidence;
+- cache/network/authentication or external-service limits;
+- propagation and adapter drift.
+
+For each risk, name the guardrail, test, or phase that controls it.
+
+## Repository-specific extensions
+
+Treat a repository’s required specification/coverage system as a first-class
+plan surface only when that repository uses one. Inspect its instructions and
+include the exact spec, traceability, coverage, or quality commands alongside
+the affected phases. Do not impose Tracey, Tracy, or another tool on unrelated
+repositories.
+
+## Review before handoff
+
+Before ending a planning or implementation session, verify:
+
+- The plan distinguishes facts, decisions, assumptions, and open gates.
+- Scope and non-goals prevent accidental expansion.
+- Every phase has an order justified by dependencies.
+- Every work item has work, validation, and observable completion criteria.
+- Completed items contain local evidence, not a detached summary.
+- Public behavior, data boundaries, and compatibility policy are explicit.
+- The support/acceptance matrix covers every advertised target.
+- Risks have concrete mitigations.
+- A fresh agent can identify the next safe action from the plan alone.
