@@ -1,6 +1,6 @@
 ---
 name: resumable-implementation-plans
-description: Create or maintain a living Markdown implementation plan for a feature, integration, refactor, migration, or multi-version change. Use when implementation must survive context restarts and needs explicit scope, design decisions, task-level progress, validation evidence, risk management, or cross-target acceptance.
+description: Create or maintain a living Markdown implementation plan for a feature, integration, refactor, migration, or multi-version change. Use when implementation must survive context restarts or compaction without losing user intent and needs explicit scope, design decisions, task-level progress, validation evidence, risk management, or cross-target acceptance.
 ---
 
 # Resumable Implementation Plans
@@ -29,6 +29,97 @@ Ask only the questions that change architecture, public behavior, irreversible
 data choices, support policy, or the testable definition of success. Otherwise
 make a stated, reversible working assumption.
 
+## Preserve user intent before shaping the plan
+
+Treat the user's instructions as a requirements source, not as conversational
+background to summarize loosely. Before deciding the plan structure:
+
+- Extract every distinct requested outcome, constraint, preference, concern,
+  example that carries design meaning, explicit non-goal, path, tool, target,
+  ordering statement, and correction from the available user messages.
+- Preserve small qualifiers such as “later,” “may,” “primarily,” “without,” and
+  “rather than.” They often distinguish phases, confidence, or ownership.
+- Give each active requirement a stable ID when the request is multi-part,
+  multi-turn, likely to be compacted, or otherwise nuanced.
+- Keep an authoritative guidance/requirements ledger in the plan. Do not remove
+  or silently generalize an entry. If the user changes direction, mark the old
+  entry as superseded by the new stable ID.
+- Map every active requirement to scope, a decision gate, one or more work items,
+  validation, or an explicit reasoned non-goal. Omission is not an acceptable
+  disposition.
+- Distinguish the user's confirmed direction from an agent recommendation even
+  when they currently agree.
+- When the full conversation is available, inspect the original user messages;
+  do not rely on memory or an intermediate summary. When compaction has already
+  removed original messages, use the plan's existing ledger and available
+  durable notes, state that limitation in the audit evidence, and do not claim
+  to have reread unavailable text.
+
+A suitable ledger and traceability shape is:
+
+```markdown
+## Authoritative user guidance ledger
+
+| ID | Active guidance | Required plan consequence | Superseded by |
+| --- | --- | --- | --- |
+| U1 | <faithful requirement, retaining important qualifiers> | <where it changes scope/design/acceptance> | — |
+
+## Guidance traceability
+
+| Guidance | Plan coverage | Evidence when complete |
+| --- | --- | --- |
+| U1 | 1.2, G3, overall criterion 4 | Pending |
+```
+
+The plan must remain useful without the conversation. A fresh agent should be
+able to reconstruct not just what to implement, but why alternatives were kept,
+deferred, or rejected.
+
+## Triple-check intent before declaring the plan ready
+
+The plan is only ready once we have literally triple checked that no intent from
+the user has been omitted without explicit direction from the user.
+
+Perform three separate passes; repeating one generic review three times does not
+satisfy this requirement:
+
+1. **Extraction pass — instruction to ledger.** Reread the available original
+   user instructions from beginning to end. Atomize compound requests and verify
+   that every outcome, constraint, path, tool, example with design force,
+   sequencing statement, concern, correction, and non-goal has an active ledger
+   entry or an explicit supersession.
+2. **Traceability pass — ledger to executable plan.** For every active ledger
+   entry, locate concrete coverage in scope, gates, tasks, validation, and/or
+   completion criteria. Then check the inverse: every material plan choice must
+   be supported by verified evidence, user guidance, or a clearly labeled
+   reversible assumption.
+3. **Adversarial omission pass — plan back to instructions.** Reread the user
+   instructions after the plan appears complete and actively search for nuance
+   that was weakened, merged, reordered, converted into an assumption, or lost.
+   Pay special attention to later clarifications, contrasts between tools or
+   targets, confidence qualifiers, lifecycle/ownership boundaries, and examples
+   that imply required behavior.
+
+Record durable evidence near the top of the plan rather than merely stating
+“reviewed” in chat:
+
+```markdown
+**Intent audit:** Passed YYYY-MM-DD against <message/source range>
+
+## Intent audit evidence
+
+- **Pass 1 — extraction:** <what sources were reread; ledger IDs added/fixed>
+- **Pass 2 — traceability:** <how every active ID was mapped; gaps fixed>
+- **Pass 3 — adversarial omission:** <qualifiers/corrections checked; gaps fixed>
+- **Known source limitation:** None, or <unavailable compacted material and the
+  durable ledger/note used instead>.
+```
+
+If any pass finds an unrepresented material intent, repair the ledger and plan,
+then rerun all three passes because the repair can change other coverage. If a
+source limitation prevents a defensible audit, mark the intent audit pending and
+ask only for the material missing direction that cannot be recovered safely.
+
 ## Use the living-plan protocol
 
 Give every plan a short metadata block and this update rule near the top:
@@ -37,6 +128,7 @@ Give every plan a short metadata block and this update rule near the top:
 **Plan status:** Active
 **Primary implementation root:** `<path or branch>`
 **Last updated:** YYYY-MM-DD
+**Intent audit:** Pending
 
 ## How to update this plan
 
@@ -61,23 +153,27 @@ intentional and the plan names the independent owners or tracks.
 
 Use only the sections that add decision-making value, but normally include:
 
-1. **Purpose** — the observable outcome and its primary user/system value.
-2. **Scope** — explicit in-scope and out-of-scope boundaries.
-3. **Established foundation** — prerequisites already completed and deliberately
+1. **Authoritative user guidance ledger and traceability** — stable intent that
+   survives compaction, plus where each requirement is implemented and proven.
+2. **Intent audit evidence** — the three distinct readiness passes and any known
+   source limitation.
+3. **Purpose** — the observable outcome and its primary user/system value.
+4. **Scope** — explicit in-scope and out-of-scope boundaries.
+5. **Established foundation** — prerequisites already completed and deliberately
    not reopened.
-4. **Confirmed constraints** — non-negotiable invariants, ownership/lifecycle
+6. **Confirmed constraints** — non-negotiable invariants, ownership/lifecycle
    rules, compatibility policy, security/privacy constraints, and repository
    workflow constraints.
-5. **Design questions that must be closed before implementation** — a gate table
+7. **Design questions that must be closed before implementation** — a gate table
    for material unknowns.
-6. **Source and implementation references** — relevant paths, commands, issue
+8. **Source and implementation references** — relevant paths, commands, issue
    context, and authoritative external sources.
-7. **Execution order** — a compact dependency flow where phase ordering is not
+9. **Execution order** — a compact dependency flow where phase ordering is not
    obvious.
-8. **Phases and work items** — the implementation contract.
-9. **Overall completion criteria** — release-level proof, not a restatement of
+10. **Phases and work items** — the implementation contract.
+11. **Overall completion criteria** — release-level proof, not a restatement of
    the task list.
-10. **Risk register** — risks that need a mitigation or a validation gate.
+12. **Risk register** — risks that need a mitigation or a validation gate.
 
 Do not add a generic “current status” section that duplicates task statuses.
 Use the task headings and completion notes as the authoritative current state.
@@ -244,6 +340,12 @@ repositories.
 
 Before ending a planning or implementation session, verify:
 
+- The three-pass intent audit was performed against the best available source,
+  is recorded in the plan, and remains honest about compacted/unavailable text.
+- Every active guidance/requirement ID has a concrete disposition and every
+  material plan choice is evidence-backed, user-directed, or labeled assumption.
+- No user intent was omitted, weakened, or superseded without explicit user
+  direction.
 - The plan distinguishes facts, decisions, assumptions, and open gates.
 - Scope and non-goals prevent accidental expansion.
 - Every phase has an order justified by dependencies.
@@ -253,3 +355,6 @@ Before ending a planning or implementation session, verify:
 - The support/acceptance matrix covers every advertised target.
 - Risks have concrete mitigations.
 - A fresh agent can identify the next safe action from the plan alone.
+
+If any of the first three checks fails, the plan is still draft regardless of
+how complete its task list appears.
