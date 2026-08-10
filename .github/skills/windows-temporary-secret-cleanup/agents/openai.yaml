@@ -1,0 +1,4 @@
+interface:
+  display_name: "Windows Temporary Secret Cleanup"
+  short_description: "Stage secrets safely and clean them up"
+  default_prompt: "Use $windows-temporary-secret-cleanup to stage a Windows secret safely and schedule reliable cleanup."
