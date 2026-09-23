@@ -1,3 +1,14 @@
+---
+name: har-net-client-creation
+description: Derive a reusable HTTP client from a browser network recording in HAR format. Use when the user wants a client or CLI for a website based on its observed requests.
+---
+
+# Create a Client from a HAR Recording
+
+Use an authorized browser network recording to identify the requests needed for the user's client or CLI. Keep raw captures private because they may contain credentials and personal data; use sanitized examples in generated artifacts.
+
+## Source note
+
 https://x.com/thdxr/status/2078727284865827140
 
 dax

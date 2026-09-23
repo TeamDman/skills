@@ -1,0 +1,4 @@
+interface:
+  display_name: "Initiate a Project"
+  short_description: "Start projects with local templates and safe defaults"
+  default_prompt: "Use $initiate-project to set up a new project, confirm its name, and apply my repository preferences."

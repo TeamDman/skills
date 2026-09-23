@@ -46,7 +46,7 @@ Apply Edward Tufte's principles to design clear, honest, high-density data visua
    - Standard fixes: move explanatory prose out of the plot into the figcaption; relocate band/epoch labels to a dedicated strip above the plot; push baseline/reference labels to the outside margin; give each in-plot annotation a leader line so the marker and the text occupy clearly separated space.
    - Watch especially: inverted axes (top of plot is now where extreme values cluster, where annotations also want to go); shared-scale small multiples (labels stacked near zero in every panel); dense scatter (text vanishes into the dot cloud unless explicitly cleared).
 
-6. **Apply the Tufte test** (see references/tufte-principles.md)
+6. **Apply the Tufte test** (see [Tufte principles](references__tufte-principles.md))
 
 ### For critiquing visualizations:
 
@@ -69,8 +69,8 @@ Apply Edward Tufte's principles to design clear, honest, high-density data visua
 
 ## Key Principles Reference
 
-- `references/tufte-principles.md` — core principles from *Visual Display of Quantitative Information*: lie factor, data-ink, chartjunk, small multiples, integrity.
-- `references/analytical-design.md` — extensions from *Envisioning Information*, *Visual Explanations*, and *Beautiful Evidence*: the 6 principles of analytical design, sparklines, layering & separation, micro/macro, range-frames, causality, confections. Load when designing dashboards, dense displays, sparklines, or explanatory graphics.
+- [Tufte principles](references__tufte-principles.md) — core principles from *Visual Display of Quantitative Information*: lie factor, data-ink, chartjunk, small multiples, integrity.
+- [Analytical design](references__analytical-design.md) — extensions from *Envisioning Information*, *Visual Explanations*, and *Beautiful Evidence*: the 6 principles of analytical design, sparklines, layering & separation, micro/macro, range-frames, causality, confections. Load when designing dashboards, dense displays, sparklines, or explanatory graphics.
 
 **Quick checklist:**
 - [ ] Lie Factor ≈ 1.0 (no visual distortion)

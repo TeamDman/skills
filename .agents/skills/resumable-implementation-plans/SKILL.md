@@ -8,6 +8,19 @@ description: Create or maintain a living Markdown implementation plan for a feat
 Create a plan that is an executable work contract, not an idea list or detached
 work log. A new agent must be able to resume safely from the file alone.
 
+## Permission and output scope
+
+A request to see an outline, example, or possible plan permits presenting it
+in chat. Saving it as a living plan is a separate action unless the user has
+already requested creation or editing of that artifact. When the destination
+or persistence is unresolved, ask with a concrete proposal. Mentioning an
+interesting possibility alone does not authorize implementing it.
+
+Batch independent questions about intent, destination, and scope when they
+can be answered together. Keep each question and its effect identifiable;
+ask dependent follow-ups after the needed answers arrive. Continue independent
+authorized work while waiting. Preserve accepted decisions across turns.
+
 ## Plan against evidence
 
 Inspect before writing or revising a plan:
@@ -25,9 +38,10 @@ Inspect before writing or revising a plan:
 - Never claim a behavior, API, dependency version, test result, or commit
   exists without evidence from the repository or an authoritative source.
 
-Ask only the questions that change architecture, public behavior, irreversible
-data choices, support policy, or the testable definition of success. Otherwise
-make a stated, reversible working assumption.
+Ask when intent, persistence, architecture, public behavior, data choices,
+support policy, or acceptance is materially unresolved. Use judgment for
+low-impact implementation details within the established scope; a reversible
+working assumption does not establish consent for a separate action.
 
 ## Preserve user intent before shaping the plan
 
@@ -233,10 +247,10 @@ Give each work item this form:
 
 ```pwsh
 <exact current command>
-````
+```
 
 **Completion criteria:** <observable condition that makes this item true>
-```
+````
 
 For an active or completed item, place **Completion notes** immediately below
 the heading. Include only durable evidence:
