@@ -1,0 +1,4 @@
+interface:
+  display_name: "TeamyStyle"
+  short_description: "Apply TeamyStyle from maintained Teamy Docs"
+  default_prompt: "Use $teamystyle to model this domain using the relevant Teamy Docs guidance."

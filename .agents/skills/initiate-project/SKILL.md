@@ -81,9 +81,11 @@ Choose the stack to suit the product. The Rust preference applies when Rust is a
 
 ### Rust projects
 
+Use the maintained TeamyStyle guidance and both `teamy-rust-cli` (G:\Programming\Repos\teamy-rust-cli) and [Cloud Terrastodon](https://github.com/AAFC-Cloud/Cloud-Terrastodon) (D:/Repos/Azure/Cloud-Terrastodon) as style guides. Start new Rust CLIs from the reviewed `teamy-rust-cli` foundation, retaining its applicable infrastructure. Study Cloud Terrastodon's relevant CLI-to-request-to-operation boundaries, domain types, logging, and module organization as implementation references; this does not require an Azure dependency or copying every historical convention.
+
 Prefer the local template at `G:\Programming\Repos\teamy-rust-cli`, especially for command line tools. Read its current `README.md`, `AGENTS.md`, and `.github\skills\initialize-from-teamy-rust-cli\SKILL.md` before copying. Inspect the initializer's current file selection so ignored local caches, downloads, captures, or private artifacts do not enter the destination.
 
-The maintained README currently prefers `cargo run -- init <destination>` from the template checkout. Its older initialization skill still names `init-other-repo.ps1`; use the maintained initializer after checking the current guidance and implementation. Preserve the destination's license and existing work; do not use `--force` casually.
+The maintained README and initialization skill use `cargo run -- init <destination>` from the reviewed template checkout. `init-other-repo.ps1` is a legacy compatibility entrypoint, not the preferred route. Check the current guidance and initializer implementation before running it. Preserve the destination's license and existing work; do not use `--force` casually.
 
 Use of this named template for an authorized Rust project covers running its reviewed initializer and creating necessary build output, provided that code execution is otherwise authorized. It does not authorize pulling the template, editing its source or lockfile, or changing its revision outside the reference-checkout permission. Prefer a temporary external build directory and a locked build when running from the template checkout.
 
