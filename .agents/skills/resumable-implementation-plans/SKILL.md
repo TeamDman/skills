@@ -1,6 +1,6 @@
 ---
 name: resumable-implementation-plans
-description: Create or maintain a living Markdown implementation plan for a feature, integration, refactor, migration, or multi-version change. Use when implementation must survive context restarts or compaction without losing user intent and needs explicit scope, design decisions, task-level progress, validation evidence, risk management, or cross-target acceptance.
+description: Create or maintain a living Markdown implementation plan for a feature, integration, refactor, migration, or multi-version change. Use when implementation must survive context restarts or compaction without losing user intent and needs explicit scope, design decisions, task-level progress, validation and timing evidence, risk management, or cross-target acceptance.
 ---
 
 # Resumable Implementation Plans
@@ -304,6 +304,69 @@ tests explicitly. Do not delete shared feature sources merely to make one
 target compile when a source-set/toolchain exclusion preserves propagation
 history more safely.
 
+## Plan and measure wall-clock time
+
+Plan for the shortest elapsed time to the required evidence and review. Work out
+which steps depend on one another, which can overlap, and which are likely to
+dominate the schedule. Keep the required coverage and review boundaries.
+
+- Batch source edits whose design and call sites are understood. Update callers,
+  tests, and examples together and review the batch before starting a build.
+  Use an early targeted check when its result would change the next edit. When
+  compiler feedback is needed, group related fixes before the next invocation.
+- Put cheap checks and focused proofs before the full gate. A test filter can
+  cut execution time while still compiling the same test executable. Reuse
+  compiled artifacts and prior evidence when the relevant sources, target,
+  features, settings, and scope still match. Keep inputs stable during a run.
+- Let independent work overlap long commands when it uses separate inputs and
+  resources. When a known failure invalidates a run, stop it early if the rest
+  would add no useful evidence. Compare cold and warm measurements separately
+  and identify what a repeat is meant to prove.
+
+### Record timings beside the work item
+
+For long-running work, note the start and end of the work window and time the
+stages that can influence the next run. Use a wall-clock timer or timestamped
+logs. Record command, outcome, elapsed time, and the settings needed to
+interpret it. Distinguish source inspection and editing, tooling setup and
+cache or network waits, compile and link, test execution, installation, and
+runtime checks wherever the boundary is observable. When one command does
+several stages, use its stage timings or instrument the boundary. Label any
+combined timing, estimate, or missing measurement.
+
+| Stage | Command or evidence | Elapsed | Settings and observations |
+| --- | --- | --- | --- |
+| Test compilation | Build the test executable | Measured wall time | Target, profile, features, build jobs, cache state |
+| Test execution | Run the compiled test executable | Measured wall time | Suite, filters, workers, threads, pass/fail counts |
+
+Keep raw logs in the normal evidence location and record the useful numbers
+under the work item. Record the failure and the change that justified a retry.
+Count overlapping intervals once in the elapsed total.
+Unattributed time may include editing, coordination, and waits. Report it as
+unattributed unless those activities were timed separately.
+
+### Interpret resource measurements before changing concurrency
+
+For a slow stage, sample the command and its child processes during the same
+interval. Record the logical CPU count and any effective quota or affinity
+limit, CPU time or utilization and its denominator, and memory headroom or
+paging when relevant. Check disk, network, or lock waits if the stage appears
+idle. A small sample or a counter the environment already exposes is enough
+for a first pass.
+
+Divide the process tree's CPU seconds by elapsed seconds to estimate average
+logical cores used. One busy logical core on a 100-logical-CPU machine is
+about 1% of machine-wide capacity, and could mean a serial bottleneck. Check
+whether the hot stage has parallel work and whether other tasks are waiting
+for CPU, I/O, or a dependency before changing job counts.
+
+Record build jobs, test worker processes, threads per process, and effective
+test concurrency separately. Where the harness supports independent work,
+compare a bounded parallel setting with a previous run using comparable
+inputs and cache state. Watch memory, shared fixtures, and cache locks.
+Keep serial runs for proven dependencies, shared state, or reproducing a
+failure that needs isolation. Use the measured result to choose the next run.
+
 ## Plan compatibility and propagation deliberately
 
 When code must span versions, loaders, platforms, or deployment targets:
@@ -365,6 +428,8 @@ Before ending a planning or implementation session, verify:
 - Every phase has an order justified by dependencies.
 - Every work item has work, validation, and observable completion criteria.
 - Completed items contain local evidence, not a detached summary.
+- Long-running work records build and execution times, resource limits, and
+  any material retries beside the evidence.
 - Public behavior, data boundaries, and compatibility policy are explicit.
 - The support/acceptance matrix covers every advertised target.
 - Risks have concrete mitigations.
