@@ -5,7 +5,7 @@ description: Recognize Teamy in voice-transcribed requests where it appears as T
 
 # Resolve Teamy transcription variants
 
-Voice transcription can render "Teamy" as "Timmy", "Timi", "Tiny", "Teemy", "TME", or a similar sound. This applies across the user's names, tools, repositories, and projects.
+Voice transcription can render "Teamy" as "Timmy", "Timi", "Tiny", "Teemy", "TME", "Temi", or a similar sound. This applies across the user's names, tools, repositories, and projects.
 
 Use the surrounding task and known names to infer the intended reference. For example, "Tiny MTG" or "Timi MTG" can mean `teamy-mtg`; "TME Codex" can mean `teamy-codex` and "TME MFT" can mean `teamy-mft`. Use the corrected name naturally when the context is clear. Do not repeatedly ask the user to confirm a correction they have already supplied.
 
